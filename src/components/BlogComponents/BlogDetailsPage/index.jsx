@@ -11,7 +11,7 @@ import { createClient } from 'next-sanity'
 const BlogDetailsPage = ({ item, data }) => {
 
     const client = createClient({
-        projectId: "q21v17fe",
+        projectId: "icb5plbz",
         dataset: "production",
         apiVersion: "2021-10-14",
         useCdn: false

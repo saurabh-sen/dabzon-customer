@@ -12,7 +12,7 @@ const Index = ({ item }) => {
     const router = useRouter();
 
     const client = createClient({
-        projectId: "q21v17fe",
+        projectId: "icb5plbz",
         apiVersion: "2021-10-14",
         dataset: "production",
         useCdn: false
