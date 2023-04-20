@@ -61,6 +61,8 @@ export default function OptModal({ userData, setShowModal, modelFor }) {
             },
             body: JSON.stringify(obj),
         });
+
+        const data = await res.json();
     }
 
     const handleResendOtp = (e) => {

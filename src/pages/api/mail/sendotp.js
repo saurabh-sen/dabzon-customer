@@ -1,4 +1,5 @@
-import { sendVerificationOtp } from "../../../helperFunction/sendmail/verificationOtp";
+// import { sendVerificationOtp } from "../../../helperFunction/sendmail/verificationOtp";
+import nodemailer from 'nodemailer'
 
 export default async function handler(req, res) {
     if(req.method === 'POST'){
@@ -22,12 +23,17 @@ export default async function handler(req, res) {
                 text: msg 
             }
             transporter.sendMail(mailData, function (err, info) {
-                if (err)
+                if (err){
                     console.log(err)
-                else
-                    console.log('email sent')
+                    return res.status(500).json({ msg:err });
+                }
+                else{
+                    // console.log('email sent')
+                    return res.status(200).json({ msg:"otp send" });
+                }
             })
-            return res.status(200).json({ msg:"otp send" });
+            // return res.status(500).json({ msg:"something broke" });
+            
         } catch (error) {
             console.log(error);
             return res.status(500).json({ msg:error })
