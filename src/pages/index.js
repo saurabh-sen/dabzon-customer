@@ -91,7 +91,7 @@ export async function getServerSideProps(context) {
   // this api is on dabzon-admin
   //if any confusion just "!! console.log(resJSON) !!"
   const value = await Promise.all([
-    fetch(`${process.env.CUSTOMER_HOST}/api/landingpage/shopbycategory`).then((res) =>
+    fetch(`https://dabzon-customer.vercel.app/api/landingpage/shopbycategory`).then((res) =>
       res.json()
     ),
   ])
