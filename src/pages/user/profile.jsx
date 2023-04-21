@@ -31,7 +31,7 @@ const Profile = ({ userDetails }) => {
     }
 
     console.log(userDetails)
-    if (userDetails === null) {
+    if (userDetails) {
       router.replace("/auth/login?redirect=profile")
     } else setProfileData(prev => prev = { ...prev, ...userDetails.data })
 
@@ -92,11 +92,10 @@ export default Profile;
 
 export async function getServerSideProps(context) {
 
-  let data = null;
+  let data = '';
   if (context.req.headers.cookie) {
     const items = context.req.headers.cookie.split(';');
     let userSession = null;
-
     for (let i = 0; i < items.length; i++) {
       const item = items[i].trim();
       if (item.startsWith('userSession=')) {
@@ -105,7 +104,11 @@ export async function getServerSideProps(context) {
       }
     }
 
-    if(userSession === null) return context.res.writeHead(302, { Location: '/auth/login?redirect=profile' }).end();
+    if(userSession === null) return {
+      props: {
+        userDetails: data,
+      }, // will be passed to the page component as props
+    }
 
     // fetch accounts data
     const res = await fetch(`${process.env.CUSTOMER_HOST}/api/user/getUser`, {
