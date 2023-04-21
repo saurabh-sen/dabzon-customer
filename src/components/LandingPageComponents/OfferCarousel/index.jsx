@@ -1,26 +1,43 @@
 import Image from "next/image";
+import useEmblaCarousel from 'embla-carousel-react'
 import React, { useEffect } from "react";
+import Autoplay from 'embla-carousel-autoplay'
 import carousel1 from '../../../../public/caraousel/caraousel1.png'
 
 const Index = () => {
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  
   return (
-    <div className="carousel my-4">
-      <div className="max-w-7xl mx-auto px-[3vw] flex overflow-x-scroll">
-        <div className="slider m-auto overflow-hidden relative rounded-md">
-          <div className="slide-track w-[3500px] md:w-[5000px]">
-            <div className="slide">
-              <Image src={carousel1} className="h-[150px] md:h-[360px] " height={"auto"} width={"auto"} alt="" />
-            </div>
-            <div className="slide">
-              <Image src={carousel1} className="h-[150px] md:h-[360px] " height={"auto"} width={"auto"} alt="" />
-            </div>
-            <div className="slide">
-              <Image src={carousel1} className="h-[150px] md:h-[360px] " height={"auto"} width={"auto"} alt="" />
-            </div>
-            <div className="slide">
-              <Image src={carousel1} className="h-[150px] md:h-[360px] " height={"auto"} width={"auto"} alt="" />
-            </div>
-          </div>
+    <div className="embla overflow-hidden" 
+    ref={emblaRef}
+    >
+      <div className="embla__container flex">
+        <div className="embla__slide min-w-0 flex-[0_0_100%] flex justify-center">
+          <Image
+           className=""
+                    loading="lazy"
+                    src={carousel1}
+                    alt="Image is loading..."
+                    width={1000}
+                    height={1000}/>
+        </div>
+        <div className="embla__slide min-w-0 flex-[0_0_100%] flex justify-center">
+          <Image
+           className=""
+                    loading="lazy"
+                    src={carousel1}
+                    alt="Image is loading..."
+                    width={1000}
+                    height={1000}/>
+        </div>
+        <div className="embla__slide min-w-0 flex-[0_0_100%] flex justify-center">
+          <Image
+           className=""
+                    loading="lazy"
+                    src={carousel1}
+                    alt="Image is loading..."
+                    width={1000}
+                    height={1000}/>
         </div>
       </div>
     </div>
