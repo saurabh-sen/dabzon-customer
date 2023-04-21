@@ -8,7 +8,7 @@ const Index = () => {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
   
   return (
-    <div className="embla overflow-hidden" 
+    <div className="embla overflow-hidden mt-8" 
     ref={emblaRef}
     >
       <div className="embla__container flex">

@@ -30,8 +30,8 @@ const Profile = ({ userDetails }) => {
       setRight(9);
     }
 
-    console.log(userDetails)
-    if (userDetails) {
+    // console.log(userDetails)
+    if (!userDetails) {
       router.replace("/auth/login?redirect=profile")
     } else setProfileData(prev => prev = { ...prev, ...userDetails.data })
 

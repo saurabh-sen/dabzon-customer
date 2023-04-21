@@ -2,7 +2,7 @@ import React from 'react'
 import LoginComponent from '../../components/Auth/LoginComponent/index'
 
 const Login = ({ redirect }) => {
-  console.log(redirect);
+  // console.log(redirect);
   return (
     <div className='Login'>
       <LoginComponent redirect={redirect} />
