@@ -20,6 +20,7 @@ const verifyPayment = async (
     razorpay_order_id: razorpay_order_id,
     razorpay_signature: razorpay_signature,
     orderStatus: "pending",
+    sales: false
   };
 
   const res = await fetch("/api/checkout/verifypayment", {
@@ -59,6 +60,7 @@ export const handleCheckOut = async (
           paymentMode: paymentMode,
           userId: userId,
           orderStatus: "pending",
+          sales: false,
         }),
       });
       const { status, orderId } = await res.json();

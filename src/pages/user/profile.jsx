@@ -9,7 +9,7 @@ import WishList from "../../components/Account/WishList/WishList";
 import { getCookie } from "../../cookie/index";
 import { useRouter } from "next/router";
 
-const Profile = () => {
+const Profile = ({ userDetails }) => {
   const router = useRouter();
   const [right, setRight] = useState(1);
   const [profileData, setProfileData] = React.useState({
@@ -23,13 +23,19 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    if(getCookie("userSession")===''){
+    if (getCookie("userSession") === '') {
       router.replace("/auth/login?redirect=profile")
     }
-    if(window.innerWidth <= 768){
+    if (window.innerWidth <= 768) {
       setRight(9);
     }
-    setProfileData(prev => prev = {...prev, userId: getCookie("userSession")})
+
+    console.log(userDetails)
+    if (userDetails === null) {
+      router.replace("/auth/login?redirect=profile")
+    } else setProfileData(prev => prev = { ...prev, ...userDetails.data })
+
+    setProfileData(prev => prev = { ...prev, userId: getCookie("userSession") });
   }, []);
 
   return (
@@ -45,13 +51,13 @@ const Profile = () => {
             case 1:
               return (
                 <div className="profile__right w-[18rem] sm:w-[30rem] md:w-[39rem]">
-                  <Hello setRight={setRight} setProfileData={setProfileData} profileData={profileData}/>
+                  <Hello setRight={setRight} setProfileData={setProfileData} profileData={profileData} />
                 </div>
               );
             case 2:
               return (
                 <div className="profile__right w-[30rem] md:w-[39rem]">
-                  <MyOrder setRight={setRight}/>
+                  <MyOrder setRight={setRight} profileData={profileData} />
                 </div>
               );
             case 3:
@@ -69,7 +75,7 @@ const Profile = () => {
             default:
               return (
                 <div className="profile__left mb-20">
-                  <AccountNav setRight={setRight} />
+                  <AccountNav setRight={setRight} setProfileData={setProfileData} profileData={profileData} />
                 </div>
               );
           }
@@ -83,3 +89,40 @@ const Profile = () => {
 };
 
 export default Profile;
+
+export async function getServerSideProps(context) {
+
+  let data = null;
+  if (context.req.headers.cookie) {
+    const items = context.req.headers.cookie.split(';');
+    let userSession = null;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i].trim();
+      if (item.startsWith('userSession=')) {
+        userSession = item.split('=')[1];
+        break;
+      }
+    }
+
+    if(userSession === null) return context.res.writeHead(302, { Location: '/auth/login?redirect=profile' }).end();
+
+    // fetch accounts data
+    const res = await fetch(`${process.env.CUSTOMER_HOST}/api/user/getUser`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userSession,
+      }),
+    })
+    data = await res.json();
+  }
+
+  return {
+    props: {
+      userDetails: data,
+    }, // will be passed to the page component as props
+  };
+}

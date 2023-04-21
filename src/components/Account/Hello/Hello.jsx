@@ -29,7 +29,8 @@ export default function Hello({ setRight, setProfileData, profileData }) {
       body: JSON.stringify(profileData),
     });
     const data = await res.json();
-    // console.log(data);
+    if(res.status === 200)alert(data.msg);
+    else alert(data.msg);
   }
 
   return (
@@ -90,7 +91,7 @@ export default function Hello({ setRight, setProfileData, profileData }) {
           name="name"
           placeholder="Enter your name..."
           required
-          value={profileData.name}
+          value={profileData.name ? profileData.name : ''}
           onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
         />
       </div>
@@ -105,7 +106,7 @@ export default function Hello({ setRight, setProfileData, profileData }) {
           name="mail"
           placeholder="Enter your mail..."
           required
-          value={profileData.email}
+          value={profileData.email ? profileData.email : ''}
           onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
         />
       </div>
@@ -138,7 +139,7 @@ export default function Hello({ setRight, setProfileData, profileData }) {
           name="number"
           placeholder="Enter your number..."
           required
-          value={profileData.number}
+          value={profileData.number ? profileData.number : ''}
           onChange={(e) => setProfileData({ ...profileData, number: e.target.value })}
         />
       </div>
@@ -154,7 +155,7 @@ export default function Hello({ setRight, setProfileData, profileData }) {
           name="password"
           placeholder="Enter your password..."
           required
-          value={profileData.password}
+          value={profileData.password ? profileData.password : ''}
           onChange={(e) => setProfileData({ ...profileData, password: e.target.value })}
         />
       </div>

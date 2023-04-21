@@ -24,9 +24,9 @@ export default async function handler(req, res) {
 
         // console.log(result)
       if (result) {
-        return res.status(200).json({ msg: "user is already present" });
+        return res.status(200).json({ msg: "updated your profile" });
       } else {
-        return res.status(200).json({ msg: "user is not present" });
+        return res.status(500).json({ msg: "profile not updated" });
       }
     } catch (error) {
       console.log(error);
