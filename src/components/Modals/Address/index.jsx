@@ -1,9 +1,9 @@
 import { getCookie } from "../../../cookie/index";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
-const index = ({ address, setAddress, setShowAddressModal }) => {
-
+const index = ({ address, setAddress, setShowAddressModal, cartArray, setCartArray, setAmount}) => {
+  
   const onSubmit = async (e) => {
     e.preventDefault();
     // console.log(address)
@@ -25,13 +25,30 @@ const index = ({ address, setAddress, setShowAddressModal }) => {
     });
     const data = await res.json();
     if (res.status === 200) {
-      alert("added address");
+      alert("Address Saved");
       setShowAddressModal(prev => prev = {
         ...prev,
         showModal: false,
       })
+      let newCartArray = cartArray.map((item, idx) => {
+        let newItem = { ...item }; // create a new object with spread operator
+        for (let i = 0; i < item.city.length; i++) {
+          if (item.city[i].cityName === address.city) {
+            newItem.productDeliveryCity = item.city[i].cityName; // modify the new object
+            newItem.productDeliveryCityPrice = item.city[i].cityValue; // modify the new object
+          }
+        }
+        return newItem;
+      })
+
+      setAmount(newCartArray.reduce((acc, item) => acc + (item.productDeliveryCityPrice ? +item.productDeliveryCityPrice : +item.productPrice) - (item.exchange ? +item.productWithExchange : 0) + (item.trolley ? +item.productWithTrolley : 0) - (item.couponDiscountPrice ? +item.couponDiscountPrice : 0), 0))
+      setCartArray(newCartArray);
+      alert("price may vary according to your selected city");
     }
     // console.log(data);
+    setShowAddressModal({
+      showModal:false
+    })
   }
 
   const cancelEdit = (e) => {

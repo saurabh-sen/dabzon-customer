@@ -28,46 +28,57 @@ const Index = () => {
     address: "",
     city: "",
   });
+  const [addressIsSet, setAddressIsSet] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState({
     showModal: false,
     address: null,
   });
 
-  useEffect(() => {
-    const selected_city = address.city;
-    for (let i = 0; i < cartArray.length; i++) {
-      let cityArray = cartArray[i].city;
-      let match = false;
-      for (let index = 0; index < cityArray.length; index++) {
-        let element = cityArray[index];
-        if (element.cityName === selected_city) {
-          match = true;
-        }
+  async function fetchAddressData() {
+    try {
+      const response = await fetch('/api/address/get', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: getCookie("userSession"),
+        }),
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setAddress(data.allData);
+        setAddressIsSet(true);
       }
-      if (!match) {
-        alert(cartArray[i].productName + " is not available in " + selected_city);
-        return;
+      else if(response.status === 201){
+        setShowAddressModal({
+          showModal:true,
+          address:null
+        })
       }
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    let newCartArray = cartArray.map((item, idx) => {
-      let newItem = {...item}; // create a new object with spread operator
-      for(let i=0; i<item.city.length ; i++){
-        if(item.city[i].cityName === address.city){
-          newItem.productDeliveryCity= item.city[i].cityName; // modify the new object
-          newItem.productDeliveryCityPrice= item.city[i].cityValue; // modify the new object
+
+  useEffect(() => {
+    if (addressIsSet) {
+      let newCartArray = cartArray.map((item, idx) => {
+        let newItem = { ...item }; // create a new object with spread operator
+        for (let i = 0; i < item.city.length; i++) {
+          if (item.city[i].cityName === address.city) {
+            newItem.productDeliveryCity = item.city[i].cityName; // modify the new object
+            newItem.productDeliveryCityPrice = item.city[i].cityValue; // modify the new object
+          }
         }
-      }
-      return newItem;
-    })
+        return newItem;
+      })
 
-    // console.log(newCartArray)
-
-    setAmount(newCartArray.reduce((acc, item) => acc + (item.productDeliveryCityPrice ? +item.productDeliveryCityPrice : +item.productPrice) - (item.exchange ? +item.productWithExchange : 0) + (item.trolley ? +item.productWithTrolley : 0) - (item.couponDiscountPrice ? +item.couponDiscountPrice : 0), 0))
-    
-    setCartArray(newCartArray);
-    // its working biro 😭
-  }, [address])
+      setAmount(newCartArray.reduce((acc, item) => acc + (item.productDeliveryCityPrice ? +item.productDeliveryCityPrice : +item.productPrice) - (item.exchange ? +item.productWithExchange : 0) + (item.trolley ? +item.productWithTrolley : 0) - (item.couponDiscountPrice ? +item.couponDiscountPrice : 0), 0))
+      setCartArray(newCartArray);
+    }
+  }, [addressIsSet])
 
 
   useEffect(() => {
@@ -113,6 +124,23 @@ const Index = () => {
   // payment function
   const handlePayment = async (e) => {
     e.preventDefault();
+    // if city is not present 
+    const selected_city = address.city;
+    for (let i = 0; i < cartArray.length; i++) {
+      let cityArray = cartArray[i].city;
+      let match = false;
+      for (let index = 0; index < cityArray.length; index++) {
+        let element = cityArray[index];
+        if (element.cityName === selected_city) {
+          match = true;
+        }
+      }
+      if (!match) {
+        alert(cartArray[i].productName + " is not available in " + selected_city);
+        return;
+      }
+    }
+
     const userId = getCookie("userSession");
     try {
       const { status, orderId } = await handleCheckOut(address, amount, cartArray, confirmOrder.paymentMode, userId);
@@ -132,6 +160,7 @@ const Index = () => {
 
   // razorpay payment gateway
   React.useEffect(() => {
+    fetchAddressData();
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     document.body.appendChild(script);
@@ -140,31 +169,6 @@ const Index = () => {
     }
     script.onerror = () => {
       console.log("razorpay script not loaded");
-    }
-
-    // get address from db
-    if (getCookie("userSession") !== '') {
-      async function fetchData() {
-        try {
-          const response = await fetch('/api/address/get', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              userId: getCookie("userSession"),
-            }),
-          });
-          const data = await response.json();
-          if (response.status === 200) setAddress(data.allData);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-      fetchData();
-    }
-    else {
-      router.replace("/auth/login?redirect=cart");
     }
   }, []);
 
@@ -189,7 +193,7 @@ const Index = () => {
       return;
     };
 
-    if(!address.city){
+    if (!address.city) {
       return alert('select your delivery city')
     }
     // ? deepak bhai neeche wala comment pd liyo
@@ -213,19 +217,19 @@ const Index = () => {
     }
 
 
-    if (paymentMode === 'online'){
+    if (paymentMode === 'online') {
       setConfirmOrder(prev => prev = { showModal: true, paymentMode: 'online' })
     } else {
       setConfirmOrder(prev => prev = { showModal: true, paymentMode: 'cod' })
-    }    
+    }
   }
 
   return (
     <div className="cart__full flex items-start justify-center lg:justify-between flex-wrap">
       <div className="cart__item__container my-8 space-y-3 sm:space-y-6">
         {
-          cartArray.length !== 0 ? cartArray?.map((i, ind, arr) => <CartItemCard item={i} key={ind} ind={ind} />) 
-          : null
+          cartArray.length !== 0 ? cartArray?.map((i, ind, arr) => <CartItemCard item={i} key={ind} ind={ind} />)
+            : null
         }
       </div>
       <div className="cart__utility flex flex-col gap-5 sm:gap-10 my-8 mb-20">
@@ -343,7 +347,7 @@ const Index = () => {
         showAddressModal.showModal
           ?
           <div className="fixed top-0 left-0 z-50 backdrop-blur-sm w-full h-full overflow-y-scroll px-[2vw] ">
-            <AddressModal address={address} setAddress={setAddress} setShowAddressModal={setShowAddressModal} />
+            <AddressModal address={address} setAddress={setAddress} setShowAddressModal={setShowAddressModal} cartArray={cartArray} setCartArray={setCartArray} setAmount={setAmount} addressIsSet={addressIsSet}/>
           </div>
           : null
       }
