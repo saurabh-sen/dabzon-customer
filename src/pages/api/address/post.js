@@ -4,10 +4,12 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       try {
         const body = await req.body;
+        const this_email = body.email;
         const client = await clientPromise;
         const db = await client.db("dabzon");
         const collection = await db.collection("address");
-        const response = await collection.insertOne(body);
+        const response = await collection
+        .updateOne({email: this_email}, {$set : { ...body }}, {upsert : true});
         if (response.acknowledged) {
           // console.log(" !!! Product created !!!");
           return res.status(200).json({msg: 'success', status: 200})
