@@ -67,7 +67,7 @@ const Index = () => {
       let newCartArray = cartArray.map((item, idx) => {
         let newItem = { ...item }; // create a new object with spread operator
         for (let i = 0; i < item.city.length; i++) {
-          if (item.city[i].cityName === address.city) {
+          if (item.city[i].cityName.toLowerCase() === address.city.toLowerCase()) {
             newItem.productDeliveryCity = item.city[i].cityName; // modify the new object
             newItem.productDeliveryCityPrice = item.city[i].cityValue; // modify the new object
           }
@@ -125,17 +125,19 @@ const Index = () => {
   const handlePayment = async (e) => {
     e.preventDefault();
     // if city is not present 
-    const selected_city = address.city;
+    const selected_city = address.city.toLowerCase();
+    console.log(selected_city);
     for (let i = 0; i < cartArray.length; i++) {
       let cityArray = cartArray[i].city;
       let match = false;
       for (let index = 0; index < cityArray.length; index++) {
         let element = cityArray[index];
-        if (element.cityName === selected_city) {
+        if (element.cityName.toLowerCase() === selected_city.toLowerCase()) {
           match = true;
         }
       }
       if (!match) {
+        console.log('i = ',i);
         alert(cartArray[i].productName + " is not available in " + selected_city);
         return;
       }
@@ -196,17 +198,14 @@ const Index = () => {
     if (!address.city) {
       return alert('select your delivery city')
     }
-    // ? deepak bhai neeche wala comment pd liyo
-    // check if user is logged in and address is selected or not then only proceed to payment
 
-    // console.log(cartArray);
     const selected_city = address.city;
     for (let i = 0; i < cartArray.length; i++) {
       let cityArray = cartArray[i].city;
       let match = false;
       for (let index = 0; index < cityArray.length; index++) {
         let element = cityArray[index];
-        if (element.cityName === selected_city) {
+        if (element.cityName.toLowerCase() === selected_city.toLowerCase()) {
           match = true;
         }
       }

@@ -8,6 +8,7 @@ export default async function handler(req, res) {
             const collection = await db.collection("address");
             const docs= await collection.findOne({ email: userId });
             if(docs){
+                delete docs._id;
                 return res.status(200).json({ allData:docs, msg:"successfully fetched address data"});
             }
             else{

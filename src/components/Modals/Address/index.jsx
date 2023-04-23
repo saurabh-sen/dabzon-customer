@@ -33,7 +33,7 @@ const index = ({ address, setAddress, setShowAddressModal, cartArray, setCartArr
       let newCartArray = cartArray.map((item, idx) => {
         let newItem = { ...item }; // create a new object with spread operator
         for (let i = 0; i < item.city.length; i++) {
-          if (item.city[i].cityName === address.city) {
+          if (item.city[i].cityName.toLowerCase() === address.city.toLowerCase()) {
             newItem.productDeliveryCity = item.city[i].cityName; // modify the new object
             newItem.productDeliveryCityPrice = item.city[i].cityValue; // modify the new object
           }

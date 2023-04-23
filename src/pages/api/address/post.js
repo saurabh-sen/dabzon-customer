@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         const db = await client.db("dabzon");
         const collection = await db.collection("address");
         const response = await collection
-        .updateOne({email: this_email}, {$setOnInsert : { ...body }}, {upsert : true});
+        .updateOne({email: this_email}, {$set : { ...body }}, {upsert : true});
         if (response.acknowledged) {
           // console.log(" !!! Product created !!!");
           return res.status(200).json({msg: 'success', status: 200})
