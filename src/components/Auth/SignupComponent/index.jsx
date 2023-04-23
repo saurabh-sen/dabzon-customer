@@ -52,38 +52,38 @@ export default function SignupComponent() {
     }
   }
 
-  const handleGoogleSignup = (e) => {
-    e.preventDefault();
-    signIn("google");
-  }
+  // const handleGoogleSignup = (e) => {
+  //   e.preventDefault();
+  //   signIn("google");
+  // }
 
-  const saveUserData = async () => {
-    // check the user exist already
-    const obj = { email: session.user.email, name: session.user.name, googleAuth: true, password: "", active: true, customAuth: false };
-    const res = await fetch(`/api/user/signup`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(obj),
-    });
-    const data = await res.json();
-    if (data.msg === "user is already present") {
-      alert("you are already resgistered");
-    }
-    else {
-      setAlready(true);
-      alert("you are successfully registered");
-    }
-  }
+  // const saveUserData = async () => {
+  //   // check the user exist already
+  //   const obj = { email: session.user.email, name: session.user.name, googleAuth: true, password: "", active: true, customAuth: false };
+  //   const res = await fetch(`/api/user/signup`, {
+  //     method: "POST",
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(obj),
+  //   });
+  //   const data = await res.json();
+  //   if (data.msg === "user is already present") {
+  //     alert("you are already resgistered");
+  //   }
+  //   else {
+  //     setAlready(true);
+  //     alert("you are successfully registered");
+  //   }
+  // }
 
-  React.useEffect(() => {
-    if (session?.user?.email && !already) saveUserData();
-  }, [session]);
+  // React.useEffect(() => {
+  //   if (session?.user?.email && !already) saveUserData();
+  // }, [session]);
 
   return (
     <>
-      <div className="flex items-center justify-evenly min-h-screen bg-gray-100 flex-wrap py-16">
+      <div className="flex items-center justify-evenly min-h-screen bg-gray-100 flex-wrap">
         <Image className="m-2 hidden md:block" src={signup_bg} alt="Image is loading..."
           width={445}
           height={445}
@@ -174,7 +174,7 @@ export default function SignupComponent() {
             >
               Create
             </button>
-            <p className="opacity-60 text-[0.8rem] my-[1rem]">OR</p>
+            {/* <p className="opacity-60 text-[0.8rem] my-[1rem]">OR</p>
             <button onClick={(e) => handleGoogleSignup(e)} className="signupwithgoogle bg-dabgreen cursor-pointer rounded-full p-2 text-white flex items-center gap-3">
               <span className="auth__icon ">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-google" viewBox="0 0 16 16">
@@ -182,7 +182,7 @@ export default function SignupComponent() {
                 </svg>
               </span>
               <p className="">SignUp with Google</p>
-            </button>
+            </button> */}
           </div>
           <p className="opacity-60 text-[0.8rem] my-12 flex gap-3">
             <Link href='/utility/privacypolicy'>Privacy & policy</Link>

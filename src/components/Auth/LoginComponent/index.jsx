@@ -7,9 +7,9 @@ import { setCookie, getCookie } from '../../../cookie/index'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
-const Index = ({redirect}) => {
+const Index = ({ redirect }) => {
   const router = useRouter();
-  const {data : session} = useSession();
+  const { data: session } = useSession();
   const [userData, setUserData] = useState({ email: '', password: '' })
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,28 +21,48 @@ const Index = ({redirect}) => {
       body: JSON.stringify(userData),
     });
     const data = await res.json();
-    if(data.msg === "wrong email or password"){
+    if (data.msg === "wrong email or password") {
       alert("wrong email or password")
     }
-    else{
-      await setCookie("userSession", data.body.email,1);
+    else {
+      await setCookie("userSession", data.body.email, 1);
       await router.replace(`/user/${redirect}`);
     }
   }
- 
-  const handleGoogleSignin = async() => {
+
+  const handleGoogleSignin = async () => {
     signIn('google');
   }
 
+  const saveUserData = async () => {
+    const obj = { email: session.user.email, name: session.user.name, googleAuth: true, password: "", active: true, customAuth: false };
+    const res = await fetch(`/api/user/signup`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    });
+    const data = await res.json();
+    if (res.status === 200) {
+      await setCookie("userSession", data.email, 1);
+      await router.replace(`/user/${redirect}`);
+    }
+    else {
+      alert("contact developers")
+    }
+  }
+
   useEffect(() => {
-    if(session?.user?.email !== undefined){
-      setCookie("userSession",session.user.email,1);
+    if (session?.user?.email !== undefined) {
+      setCookie("userSession", session.user.email, 1);
+      saveUserData();
       router.replace(`/user/${redirect}`);
     }
-  } ,[session])
+  }, [session])
 
   return (
-    <section className="flex items-center justify-evenly min-h-screen bg-gray-100 flex-wrap py-16">
+    <section className="flex items-center justify-evenly min-h-screen bg-gray-100 flex-wrap py-10">
       <Image width={445} height={445} src={login_bg} className="m-2 hidden md:block" alt="Sample image" />
       <div className="flex flex-col items-center justify-center min-w-[300px] space-y-8 ">
         <div className="customer__heading w-full ">
