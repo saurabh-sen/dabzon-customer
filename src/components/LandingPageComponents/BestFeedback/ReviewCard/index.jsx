@@ -12,7 +12,7 @@ const Index = ({ item }) => {
                 <div className='p-3 md:p-6'>
                     <div className='pt-3 md:pt-5 w-full'>
                         <p className='text-gray-900 text-lg md:text-2xl font-semibold'>{item?.name}</p>
-                        <p className='stars text-xs flex gap-1'>
+                        <p className='stars text-xs flex gap-1 my-1'>
                             {
                                 [...Array(+(item?.rating) / 2).keys()].map((item, idx) => <span key={idx}>
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

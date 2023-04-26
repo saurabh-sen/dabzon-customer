@@ -84,19 +84,19 @@ const Card = ({ item }) => {
         <Image onClick={() => router.push(`/product/${item._id}`)} className="pb-2 m-auto w-60 aspect-video" loading="lazy" src={item.image1} width={100} height={100} alt="Image is loading..." />
         {
           item.fakeDiscount
-            ? <p className="discount text-white border border-white px-3 py-1 bg-[#DC2626] rounded-3xl absolute left-1 bottom-1 text-[10px] md:text-xs">{item.fakeDiscount}% OFF</p>
+            ? <p className="discount text-white border-2 border-white px-4 py-2 bg-[#DC2626] rounded-3xl absolute left-1 bottom-1 text-[10px] md:text-xs m-4 ">{item.fakeDiscount}% OFF</p>
             : null
         }
       </div>
 
       <div className="singleProductCard__descripion">
         <div className="singleProductCard__title p-3 space-x-2 truncate text-xs md:text-sm">
-          <span className="text-gray-900 ">{item.productName}</span>
-          <span className="text-gray-500  ">{item.productShortDescription}</span>
+          <span className="text-gray-900 text-base ">{item.productName.toUpperCase()}</span>
+          <span className="text-gray-500 text-base ">{item.productShortDescription.toUpperCase()}</span>
         </div>
 
         <div className="singleProductCard__price border-gray-200 pb-1 flex justify-start items-center pr-3">
-          <span className="text-dabgreen text-lg md:text-2xl p-3 font-semibold">₹{item.price}</span>
+          <span className="text-dabgreen text-lg md:text-2xl px-3 font-semibold">₹{item.price}</span>
           <span className="text-gray-500 text-sm md:text-lg line-through">₹{Math.round((item.price / (1 - (item.fakeDiscount / 100))))}</span>
         </div>
 
