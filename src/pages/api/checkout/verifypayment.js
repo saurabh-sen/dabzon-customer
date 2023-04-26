@@ -25,6 +25,9 @@ export default async function handler(req, res) {
         const response = await collection.insertOne(order);
         if (response.acknowledged) {
           orderConfirmationMail(order);
+          order.cartArray.map(async(item) =>{
+            await db.collection("product").updateOne({_id:new Object(item._id)},{$inc: {stock: -1} });
+          })
           return res.status(201).json({ status: 201, signatureIsValid: "true", msg: "payment successful and order saved to db" });
         }
         else return res.status(500).json({ status: 500, signatureIsValid: "true", msg: "payment successful but order not saved to db" });
