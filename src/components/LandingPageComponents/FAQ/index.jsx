@@ -46,7 +46,7 @@ const Index = () => {
               alt="Image is loading..."
             />
             <div className="flex flex-col">
-              <p className="text-gray-900 sm:text-base text-sm font-bold">
+              <p className="text-gray-900 sm:text-base text-sm font-semibold">
                 {faqData[0]?.ques}
               </p>
               <p className="text-gray-700 sm:text-sm text-xs">
@@ -65,7 +65,7 @@ const Index = () => {
               alt="Image is loading..."
             />
             <div className="flex flex-col">
-              <p className="text-gray-900 sm:text-base text-sm font-bold">
+              <p className="text-gray-900 sm:text-base text-sm font-semibold">
                 {faqData[1]?.ques}
               </p>
               <p className="text-gray-700 sm:text-sm text-xs">
@@ -84,7 +84,7 @@ const Index = () => {
               alt="Image is loading..."
             />
             <div className="flex flex-col">
-              <p className="text-gray-900 sm:text-base text-sm font-bold">
+              <p className="text-gray-900 sm:text-base text-sm font-semibold">
                 {faqData[2]?.ques}
               </p>
               <p className="text-gray-700 sm:text-sm text-xs">
@@ -107,7 +107,7 @@ const Index = () => {
               alt="Image is loading..."
             />
             <div className="flex flex-col">
-              <p className="text-gray-900 sm:text-base text-sm font-bold">
+              <p className="text-gray-900 sm:text-base text-sm font-semibold">
                 {faqData[3]?.ques}
               </p>
               <p className="text-gray-700 sm:text-sm text-xs">
@@ -126,7 +126,7 @@ const Index = () => {
               alt="Image is loading..."
             />
             <div className="flex flex-col">
-              <p className="text-gray-900 sm:text-base text-sm font-bold">
+              <p className="text-gray-900 sm:text-base text-sm font-semibold">
                 {faqData[4]?.ques}
               </p>
               <p className="text-gray-700 sm:text-sm text-xs">
@@ -145,7 +145,7 @@ const Index = () => {
               alt="Image is loading..."
             />
             <div className="flex flex-col">
-              <p className="text-gray-900 sm:text-base text-sm font-bold">
+              <p className="text-gray-900 sm:text-base text-sm font-semibold">
                 {faqData[5]?.ques}
               </p>
               <p className="text-gray-700 sm:text-sm text-xs">

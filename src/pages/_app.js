@@ -1,10 +1,15 @@
 import "../styles/globals.css";
+import { DM_Sans } from 'next/font/google'
 import { store } from "../reduxStore/store";
 import { Provider } from "react-redux";
 import { useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/router";
 import Loader from "../components/Loader";
+
+const dm_sans = DM_Sans({ 
+  weight: '500',
+  subsets: ['latin'] })
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -33,7 +38,10 @@ export default function App({ Component, pageProps }) {
   return (
     <SessionProvider>
       <Provider store={store}>
+        <main className={dm_sans.className}>
         {loading ? <Loader /> : <Component {...pageProps} />}
+
+        </main>
       </Provider>
     </SessionProvider>
   );

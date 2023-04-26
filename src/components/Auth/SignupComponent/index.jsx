@@ -106,7 +106,7 @@ export default function SignupComponent() {
                 className="text-gray-900 "
                 htmlFor="name"
               >
-                Your Name
+                Add Name
               </label>
               <input
                 onChange={(e) => setUserData((prev) => prev = { ...prev, name: e.target.value })}
