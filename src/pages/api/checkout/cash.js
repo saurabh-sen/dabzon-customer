@@ -12,6 +12,11 @@ export default async function handler(req, res) {
       const order = await orders.insertOne(body);
       if(order.acknowledged){
         orderConfirmationMail(body);
+        //stock decrement
+        body.cartArray.map(async(item) =>{
+          await db.collection("product").updateOne({_id:new Object(item._id)},{$inc: {stock: -1} });
+        })
+        
         return res.status(200).json({ status: 200, orderId: order.insertedId });
       }
       return res.status(500).json({ status: 500, orderId: null });
