@@ -58,6 +58,7 @@ const Card = ({ item }) => {
       productWithTrolley: null,
       _id: item._id,
       quantity: 1,
+      city: item.city
     }
     dispatch(setCart(cartItem));
     router.push('user/cart')
