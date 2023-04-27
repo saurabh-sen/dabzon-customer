@@ -64,6 +64,7 @@ const Index = () => {
 
   useEffect(() => {
     if (addressIsSet) {
+      // change price acc to city
       let newCartArray = cartArray.map((item, idx) => {
         let newItem = { ...item }; // create a new object with spread operator
         for (let i = 0; i < item.city.length; i++) {
