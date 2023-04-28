@@ -10,48 +10,49 @@ import TopSellingBatteries from "../components/LandingPageComponents/TopSellingB
 import FAQ from "../components/LandingPageComponents/FAQ/index";
 import BestFeedback from "../components/LandingPageComponents/BestFeedback/index";
 import BlogComponents from "../components/BlogComponents/index";
+import Location from "../components/LandingPageComponents/Location/index";
 import { useState, useEffect } from "react";
 import { createClient } from "next-sanity";
 
 export default function Home({ shopbycategoryData, blogData }) {
   const [city, setCity] = useState("");
 
-  const incrementVisit = async () => {
-    const res = await fetch("/api/landingpage/incrementVisit");
-    const resJSON = await res.json();
-    // console.log(resJSON);
-  };
+  // const incrementVisit = async () => {
+  //   const res = await fetch("/api/landingpage/incrementVisit");
+  //   const resJSON = await res.json();
+  //   // console.log(resJSON);
+  // };
 
-  //get location
-  useEffect(() => {
-    const options = {
-      enableHighAccuracy: true,
-    };
-    if ("geolocation" in navigator) {
-      // if location allowed
-      // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-        const { latitude, longitude } = coords;
-        // this api gives location details from latitude and longitude
-        // console.log(coords);
-        const res = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-        );
-        const data = await res.json();
-        // console.log(data.city);
-        setCity(data.city);
-      });
-    } else {
-      // if location not allowed
-      setCity("none");
-    }
+  // //get location
+  // useEffect(() => {
+  //   const options = {
+  //     enableHighAccuracy: true,
+  //   };
+  //   if ("geolocation" in navigator) {
+  //     // if location allowed
+  //     // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
+  //     navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+  //       const { latitude, longitude } = coords;
+  //       // this api gives location details from latitude and longitude
+  //       // console.log(coords);
+  //       const res = await fetch(
+  //         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+  //       );
+  //       const data = await res.json();
+  //       // console.log(data.city);
+  //       setCity(data.city);
+  //     });
+  //   } else {
+  //     // if location not allowed
+  //     setCity("none");
+  //   }
 
-    // save the number of visitor on home page using local storage into mongodb database
-    if (localStorage.getItem("homePageVisit") === null) {
-      localStorage.setItem("homePageVisit", 1);
-      incrementVisit();
-    }
-  }, []);
+  //   // save the number of visitor on home page using local storage into mongodb database
+  //   if (localStorage.getItem("homePageVisit") === null) {
+  //     localStorage.setItem("homePageVisit", 1);
+  //     incrementVisit();
+  //   }
+  // }, []);
   return (
     <>
       <Head>
@@ -65,6 +66,7 @@ export default function Home({ shopbycategoryData, blogData }) {
       </Head>
       <main className="main__page bg-gray-100 ">
         <NavBar />
+        {/* <Location /> */}
         <OfferCarousel />
         <OtherSupport />
         <ShopByCategory data={shopbycategoryData} />
@@ -84,21 +86,21 @@ const client = createClient({
   projectId: "icb5plbz",
   dataset: "production",
   apiVersion: "2021-10-14",
-  useCdn: false
+  useCdn: false,
 });
 
 export async function getServerSideProps(context) {
   // this api is on dabzon-admin
   //if any confusion just "!! console.log(resJSON) !!"
   const value = await Promise.all([
-    fetch(`https://dabzon-customer.vercel.app/api/landingpage/shopbycategory`).then((res) =>
-      res.json()
-    ),
-  ])
-  
+    fetch(
+      `https://dabzon-customer.vercel.app/api/landingpage/shopbycategory`
+    ).then((res) => res.json()),
+  ]);
+
   const query = `*[_type == "blog"][0..1]`;
   const blog = await client.fetch(query);
-  
+
   return {
     props: {
       shopbycategoryData: value[0].allData,

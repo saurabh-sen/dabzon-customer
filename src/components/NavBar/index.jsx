@@ -1,21 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import MobileNavBar from './MobileNavBar/index';
 import avatar from '../../../public/avatar.png'
 import logo from '../../../public/icons/logo.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../reduxStore/Slices/Loader/LoaderSlice'
 import { signOut } from 'next-auth/react';
-import { deleteCookie } from '../../cookie/index';
-
+import { deleteCookie, getCookie } from '../../cookie/index';
 
 function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearchResults }) {
     // idk what to do with this
-    const [login, setLogin] = useState(1);
-
-    const search = useRef(null);
+    const [login, setLogin] = useState(false);
     const router = useRouter();
     const [navbar, setNavbar] = useState(false);
     const dispatch = useDispatch();
@@ -55,8 +52,12 @@ function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearc
     }
 
     useEffect(() => {
-        search.current.focus();
-    }, []);
+        if (getCookie("userSession").length > 0) setLogin(login => login = true);
+        if (router.query.searchQuery) {
+            setSearchQuery(searchQuery => searchQuery = router.query.searchQuery);
+            debouncedHandleSearch(router.query.searchQuery.toLocaleLowerCase());
+        }
+    }, [router.query.searchQuery]);
 
     return (
         <div className='Navbar sticky top-0 z-30 inline-block w-full bg-dabgreen md:bg-white'>
@@ -64,11 +65,11 @@ function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearc
                 <Link href='/' className="logo inline-block bg-dabgreen text-white p-1 font-normal rounded-full">
                     <Image width={50} height={50} className="" src={logo} alt="logo" />
                 </Link>
-                <button onClick={() => { router.pathname !== '/user/search' && router.push('/user/search')}} className="group search__container md:flex flex-row gap-3 bg-[#f3f4f6] rounded-3xl px-4 !py-3 hidden items-center relative">
+                <button onClick={() => { router.pathname !== '/user/search' && router.push('/user/search') }} className="group search__container md:flex flex-row gap-3 bg-[#f3f4f6] rounded-3xl px-4 !py-3 hidden items-center relative">
                     <svg className='sm:w-5' xmlns="http://www.w3.org/2000/svg" fill="gray" viewBox="0 0 16 16">
                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                     </svg>
-                    <input ref={search} onChange={(e) => handleSearchProduct(e)} className='border-0 outline-none bg-transparent w-56' type="search" name="search" id="search" placeholder='Search...' value={searchQuery} />
+                    <input onChange={(e) => handleSearchProduct(e)} className='border-0 outline-none bg-transparent w-56' type="search" name="search" id="search" placeholder='Search...' value={searchQuery} />
                     {/* relevant search results */}
                     {/* <div className="search__results bg-white rounded-md shadow-md absolute top-[70px] left-0 hidden group-focus-within:block w-full z-20" autoComplete="off">
                         {
@@ -110,16 +111,18 @@ function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearc
                     <Link href='/utility/about'>About Us</Link>
                 </div>
                 <div className="account__and__carts md:flex space-x-4 hidden">
+                    {/* todo */}
                     {
-                        !login ?
-                            <>
-                                <Link href='/auth/login' className="login border border-dabgreen text-dabgreen font-semibold hover:bg-dabgreen hover:text-white focus:bg-dabgreen focus:text-white px-6 py-2 rounded-full">Log In</Link>
-                                <Link href='/auth/signup' className="signup border border-dabgreen text-dabgreen font-semibold hover:bg-dabgreen hover:text-white focus:bg-dabgreen focus:text-white px-6 py-2 rounded-full">Sign Up</Link>
-                            </>
-                            :
-                            <button onClick={() => router.push('/user/profile')} className="logout border border-dabgreen text-dabgreen font-semibold hover:bg-dabgreen hover:text-white focus:bg-dabgreen focus:text-white rounded-full">
+                        login ?
+                            <button onClick={() => router.push('/user/profile')} className="logout border border-dabgreen font-semibold bg-dabgreen text-white focus:text-white rounded-full flex gap-2 items-center px-3 py-1">
+                                <p className="text-sm font-medium">John Doe</p>
                                 <Image className='w-10 rounded-full' src={avatar} alt="avatar" width={1000} height={1000} />
                             </button>
+                            :
+                            <>
+                                <Link href='/auth/login' className="login border border-dabgreen text-dabgreen font-semibold hover:bg-dabgreen hover:text-white focus:bg-dabgreen focus:text-white px-6 py-2 rounded-full">Log In</Link>
+                                <Link href='/auth/signup' className="signup border border-dabgreen font-semibold bg-dabgreen hover:text-white text-white px-6 py-2 rounded-full">Sign Up</Link>
+                            </>
                     }
                     <Link href='/user/cart' className="cart__icon my-auto relative">
                         <svg className='sm:w-5' xmlns="http://www.w3.org/2000/svg" fill="#10b981" viewBox="0 0 16 16">
