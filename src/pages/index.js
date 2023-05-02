@@ -11,8 +11,9 @@ import FAQ from "../components/LandingPageComponents/FAQ/index";
 import BestFeedback from "../components/LandingPageComponents/BestFeedback/index";
 import BlogComponents from "../components/BlogComponents/index";
 import Location from "../components/LandingPageComponents/Location/index";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "next-sanity";
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 
 export default function Home({ shopbycategoryData, blogData }) {
   const [city, setCity] = useState("");
@@ -53,6 +54,12 @@ export default function Home({ shopbycategoryData, blogData }) {
   //     incrementVisit();
   //   }
   // }, []);
+
+  const tawkMessengerRef = useRef();
+
+  // const handleMinimize = () => {
+  //   tawkMessengerRef.current.minimize();
+  // };
   return (
     <>
       <Head>
@@ -65,6 +72,13 @@ export default function Home({ shopbycategoryData, blogData }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="main__page bg-gray-100 ">
+        {/* <button onClick={handleMinimize}> Minimize the Chat </button> */}
+
+        <TawkMessengerReact
+          propertyId={process.env.NEXT_PUBLIC_PROPERTYID}
+          widgetId={process.env.NEXT_PUBLIC_WIDGETID}
+          ref={tawkMessengerRef}
+        />
         <NavBar />
         {/* <Location /> */}
         <OfferCarousel />
