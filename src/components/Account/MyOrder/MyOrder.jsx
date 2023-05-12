@@ -49,14 +49,15 @@ export default function MyOrder({ setRight, profileData }) {
 
   return (
     <div className="flex flex-col border-2 bg-white rounded-xl px-2 md:p-6 mb-20 sm:mb-0 w-full overflow-hidden">
-      {/* search bar and filter */}
+      {/* go back svg */}
       <button className="block md:hidden" onClick={() => setRight(9)}>
-        {/* go back svg */}
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
       </button>
-      <div className="flex justify-center md:justify-between flex-wrap gap-3">
+
+      {/* search bar and filter */}
+      {/* <div className="flex justify-center md:justify-between flex-wrap gap-3">
         <button className="group search__container md:flex flex flex-row gap-3 bg-[#f3f4f6] rounded-3xl px-4 py-1 sm:py-2  items-center relative">
           <svg
             className="sm:w-5"
@@ -86,7 +87,7 @@ export default function MyOrder({ setRight, profileData }) {
           width={1000}
           height={1000}
         />
-      </div>
+      </div> */}
 
       {/* orders */}
       {

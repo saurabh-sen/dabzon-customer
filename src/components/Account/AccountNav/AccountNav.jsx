@@ -47,7 +47,7 @@ export default function AccountNav({ setRight, right, profileData }){
         </div>
         <div className="flex flex-col">
           <p className=" text-lg text-green-900">MY Order</p>
-          <p className="  text-xs text-green-800">20+ order till Today</p>
+          <p className="  text-xs text-green-800">your orders till Today</p>
         </div>
       </div>
 
@@ -67,13 +67,13 @@ export default function AccountNav({ setRight, right, profileData }){
         </div>
         <div className="flex flex-col">
           <p className=" text-lg text-green-900">Saved Address</p>
-          <p className="  text-xs text-green-800">2+ Address Saved</p>
+          <p className="  text-xs text-green-800">Your delivery Addresses</p>
         </div>
       </div>
 
 
 
-      <div onClick={() => setRight(4)} className={` cursor-pointer box-border border-gray-200 ${right === 4 ? 'bg-[#d1fae5]' : 'bg-white'} border h-16 lg:w-72 w-56 flex items-center rounded-lg m-2`}>
+      {/* <div onClick={() => setRight(4)} className={` cursor-pointer box-border border-gray-200 ${right === 4 ? 'bg-[#d1fae5]' : 'bg-white'} border h-16 lg:w-72 w-56 flex items-center rounded-lg m-2`}>
         <div className='w-10 h-10 mx-4'>
 
           <Image
@@ -89,7 +89,7 @@ export default function AccountNav({ setRight, right, profileData }){
           <p className=" text-lg text-green-900">My Stuff</p>
           <p className="  text-xs text-green-800">2+ Address Saved</p>
         </div>
-      </div>
+      </div> */}
       <button onClick={() => handleSignOut()} className='bg-red-200 lg:w-72 w-56 h-10  my-2 rounded-[100px] mx-2'>Log Out</button>
     </div>
   )

@@ -4,13 +4,12 @@ import FilterDropdown from './FilterDropdown/index'
 import TopSellingBatteriesCard from '../LandingPageComponents/TopSellingBatteries/TopSellingBatteriesCard'
 import { useDispatch, useSelector } from 'react-redux'
 
-const index = ({ searchQuery, searchResults }) => {
+const index = ({ searchQuery, searchResults, handleSearchProduct }) => {
 
   const [filters, setFilters] = React.useState([]);
   const [filteredItems, setFilteredItems] = React.useState([]);
   const [sort, setSort] = React.useState("Low to high");
 
-  const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.loading);
   // console.log(filteredItems)
 
@@ -49,8 +48,16 @@ const index = ({ searchQuery, searchResults }) => {
 
   return (
     <div className="serachComponents my-8">
-      <div className="searchComponents__container max-w-7xl mx-auto px-[3vw] flex flex-col gap-3">
+      <div className="searchComponents__container max-w-7xl mx-auto px-[3vw] flex flex-col gap-3 mb-28 sm:mb-0">
         <div className='searchComponents__filter__sort flex flex-col text-center gap-3 sm:flex-row sm:justify-between mb-2 md:mb-0' >
+          
+          {/* search bar */}
+          <div className="group search__container flex md:hidden flex-row gap-3 bg-[#dcdde0] rounded-3xl px-4 !py-3 items-center relative">
+            <svg className='w-5' xmlns="http://www.w3.org/2000/svg" fill="gray" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+            </svg>
+            <input onChange={(e) => handleSearchProduct(e)} className='border-0 outline-none bg-transparent w-full sm:w-56' type="search" name="search" id="search" placeholder='Search...' value={searchQuery} />
+          </div>
           {searchQuery
             ? <div className='heading space-x-2'>
               <span className='text-lg sm:text-2xl font-semibold'>Search results for</span>

@@ -21,7 +21,8 @@ const verifyPayment = async (
     razorpay_signature: razorpay_signature,
     orderStatus: "pending",
     sales: false,
-    deliveryDate: ""
+    deliveryDate: "",
+    shippingCode: "",
   };
 
   const res = await fetch("/api/checkout/verifypayment", {

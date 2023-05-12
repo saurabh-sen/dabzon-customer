@@ -69,6 +69,8 @@ const Card = ({ item }) => {
     dispatch(deleteFromCart(id))
   }
 
+  // console.log(item);
+
   return (
     <div className="singleProductCard cursor-pointer border-2 border-gray-200 shadow-md w-[295px] rounded-xl ">
 

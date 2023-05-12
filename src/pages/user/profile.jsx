@@ -63,15 +63,15 @@ const Profile = ({ userDetails }) => {
             case 3:
               return (
                 <div className="profile__right w-[30rem] md:w-[39rem]">
-                  <Address setRight={setRight} />
+                  <Address setRight={setRight} userId={profileData.userId} />
                 </div>
               );
-            case 4:
-              return (
-                <div className="profile__right w-[30rem] md:w-[39rem]">
-                  <WishList setRight={setRight} />
-                </div>
-              );
+            // case 4:
+            //   return (
+            //     <div className="profile__right w-[30rem] md:w-[39rem]">
+            //       <WishList setRight={setRight} />
+            //     </div>
+            //   );
             default:
               return (
                 <div className="profile__left mb-20">

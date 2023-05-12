@@ -13,7 +13,7 @@ import BlogComponents from "../components/BlogComponents/index";
 import Location from "../components/LandingPageComponents/Location/index";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "next-sanity";
-import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+// import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 
 export default function Home({ shopbycategoryData, blogData }) {
   const [city, setCity] = useState("");
@@ -55,8 +55,8 @@ export default function Home({ shopbycategoryData, blogData }) {
   //   }
   // }, []);
 
-  const tawkMessengerRef = useRef();
-
+  
+  // const tawkMessengerRef = useRef();
   // const handleMinimize = () => {
   //   tawkMessengerRef.current.minimize();
   // };
@@ -74,11 +74,11 @@ export default function Home({ shopbycategoryData, blogData }) {
       <main className="main__page bg-gray-100 ">
         {/* <button onClick={handleMinimize}> Minimize the Chat </button> */}
 
-        <TawkMessengerReact
+        {/* <TawkMessengerReact
           propertyId={process.env.NEXT_PUBLIC_PROPERTYID}
           widgetId={process.env.NEXT_PUBLIC_WIDGETID}
           ref={tawkMessengerRef}
-        />
+        /> */}
         <NavBar />
         {/* <Location /> */}
         <OfferCarousel />

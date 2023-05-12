@@ -5,46 +5,20 @@ import { useState, useEffect, useCallback } from 'react';
 import MobileNavBar from './MobileNavBar/index';
 import avatar from '../../../public/avatar.png'
 import logo from '../../../public/icons/logo.svg'
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../reduxStore/Slices/Loader/LoaderSlice'
+import { useSelector } from 'react-redux';
 import { signOut } from 'next-auth/react';
 import { deleteCookie, getCookie } from '../../cookie/index';
 
-function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearchResults }) {
-    // idk what to do with this
-    const [login, setLogin] = useState(false);
+function NavBar({ searchQuery = "", setSearchQuery, handleSearchProduct }) {
+    const [login, setLogin] = useState({
+        login: false,
+        name: "",
+        email: "",
+        avatar: "",
+    });
     const router = useRouter();
     const [navbar, setNavbar] = useState(false);
-    const dispatch = useDispatch();
     const { cart } = useSelector(state => state.cart);
-    const { loading } = useSelector(state => state.loading);
-
-    const debounce = (cb, d) => {
-        let timer;
-        return function (searchQuery) {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(() => {
-                cb(searchQuery);
-            }, d);
-        };
-    };
-
-    const handleSearch = async (searchQuery) => {
-        if (searchQuery.length === 0) return;
-        dispatch(setLoading(true));
-        const response = await fetch(`/api/search/${searchQuery}`);
-        const data = await response.json();
-        setSearchResults(data.msg);
-        dispatch(setLoading(false));
-    }
-
-    const debouncedHandleSearch = useCallback(debounce(handleSearch, 500), []);
-
-    const handleSearchProduct = (e) => {
-        e.preventDefault();
-        setSearchQuery(searchQuery => searchQuery = e.target.value.toLowerCase());
-        debouncedHandleSearch(e.target.value.toLowerCase());
-    }
 
     const handleSignOut = () => {
         signOut();
@@ -52,12 +26,22 @@ function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearc
     }
 
     useEffect(() => {
-        if (getCookie("userSession").length > 0) setLogin(login => login = true);
+        if(getCookie("userSession")){
+            setLogin(prev => prev = {...prev, login:true});
+        }
+        fetch(`/api//user/navbarProfile?userId=${getCookie("userSession")}`).then((res) => res.json()).then((data) => {
+            if(data.status === 200){
+
+                setLogin(prev => prev = {login:true, name:data.data.name, email: data.data.email, avatar: data.data.image});
+            }
+        })
         if (router.query.searchQuery) {
             setSearchQuery(searchQuery => searchQuery = router.query.searchQuery);
             debouncedHandleSearch(router.query.searchQuery.toLocaleLowerCase());
         }
     }, [router.query.searchQuery]);
+
+    // console.log(login);
 
     return (
         <div className='Navbar sticky top-0 z-30 inline-block w-full bg-dabgreen md:bg-white'>
@@ -70,38 +54,6 @@ function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearc
                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                     </svg>
                     <input onChange={(e) => handleSearchProduct(e)} className='border-0 outline-none bg-transparent w-56' type="search" name="search" id="search" placeholder='Search...' value={searchQuery} />
-                    {/* relevant search results */}
-                    {/* <div className="search__results bg-white rounded-md shadow-md absolute top-[70px] left-0 hidden group-focus-within:block w-full z-20" autoComplete="off">
-                        {
-                            searchQuery.length === 0
-                                ? null
-                                :
-                                <div className="search__results my-3 p-3 text-left">
-                                    <p className="search__results__title text-sm">Most Relevent Results</p>
-                                    <div className="search__results__list flex items-center flex-col gap-2 mt-2">
-                                        {
-                                            !loading
-                                                ? searchResults.map((it, idx) => {
-                                                    if (idx > 5) return;
-                                                    return (<div key={idx} onClick={(e) => router.push(`/product/${it._id}`)} className="search__results__item bg-[#f3f4f6] rounded-md px-2 py-1 text-sm flex justify-between items-center w-full">
-                                                        <Image width={40} height={40} className="rounded-full bg-white aspect-square" src={it.image1} alt="logo" />
-                                                        <div className="search__results__item__details flex flex-col gap-1">
-                                                            <p className="search__results__item__name text-xs font-medium">{it.productName}</p>
-                                                            <p className="search__results__item__price text-xs font-medium truncate">{it.productShortDescription}</p>
-                                                        </div>
-                                                        <p className="search__results__item__name text-dabgreen text-lg font-semibold">₹{it.price}</p>
-                                                    </div>)
-                                                })
-                                                : <svg className="animate-spin h-6 w-6 mr-3 text-dabgreen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                                                </svg>
-                                        }
-                                    </div>
-                                </div>
-                        }
-
-                    </div> */}
                 </button>
                 <div className="navlinks md:flex gap-4 hidden">
                     <Link href='/'>Home</Link>
@@ -113,10 +65,10 @@ function NavBar({ searchQuery = "", setSearchQuery, searchResults = [], setSearc
                 <div className="account__and__carts md:flex space-x-4 hidden">
                     {/* todo */}
                     {
-                        login ?
+                        login.login ?
                             <button onClick={() => router.push('/user/profile')} className="logout border border-dabgreen font-semibold bg-dabgreen text-white focus:text-white rounded-full flex gap-2 items-center px-3 py-1">
-                                <p className="text-sm font-medium">John Doe</p>
-                                <Image className='w-10 rounded-full' src={avatar} alt="avatar" width={1000} height={1000} />
+                                <p className="text-sm font-medium">{login.name}</p>
+                                <Image className='w-10 rounded-full' src={login.avatar} alt="avatar" width={1000} height={1000} />
                             </button>
                             :
                             <>
